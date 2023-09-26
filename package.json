@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "scripts": {},
+  "scripts": {
+    "format": "prettier --write 'src/**/*.{ts,tsx,js,jsx,json,md}'"
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/extpkg/extension-the-chroma-incident.git"
@@ -13,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/extpkg/extension-the-chroma-incident/issues"
   },
-  "homepage": "https://github.com/extpkg/extension-the-chroma-incident#readme"
+  "homepage": "https://github.com/extpkg/extension-the-chroma-incident#readme",
+  "devDependencies": {
+    "prettier": "^3.0.3"
+  }
 }
