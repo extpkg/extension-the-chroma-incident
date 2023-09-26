@@ -4,7 +4,9 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "format": "prettier --write 'src/**/*.{ts,tsx,js,jsx,json,md}'"
+    "format": "prettier --write 'src/**/*.{ts,tsx,js,jsx,json,md}'",
+    "lint": "eslint 'src/**/*.{ts,tsx,js,jsx}' --quiet",
+    "lint:fix": "eslint 'src/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "repository": {
     "type": "git",
@@ -17,6 +19,12 @@
   },
   "homepage": "https://github.com/extpkg/extension-the-chroma-incident#readme",
   "devDependencies": {
+    "@types/node": "^20.7.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.3",
+    "@typescript-eslint/parser": "^6.7.3",
+    "eslint": "^8.50.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
     "prettier": "^3.0.3"
   }
 }
