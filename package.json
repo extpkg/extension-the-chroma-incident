@@ -1,0 +1,17 @@
+{
+  "name": "extension-the-chroma-incident",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/extpkg/extension-the-chroma-incident.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/extpkg/extension-the-chroma-incident/issues"
+  },
+  "homepage": "https://github.com/extpkg/extension-the-chroma-incident#readme"
+}
