@@ -94,14 +94,11 @@ const buildOptions = {
 /**
  * @type {import('esbuild').BuildOptions}
  */
-const appBuildOptions = {
-  ...buildOptions,
-  entryPoints: ["./src/app/index.ts"],
-  outdir: "./dist/app/",
-  loader: {
-    ".woff2": "file",
-  },
-};
+// const appBuildOptions = {
+//   ...buildOptions,
+//   entryPoints: ["./src/app/index.ts"],
+//   outdir: "./dist/app/",
+// };
 
 /**
  * @type {import('esbuild').BuildOptions}
@@ -126,7 +123,7 @@ rm("./dist", { recursive: true, force: true }, (err) => {
 const isTypeCheckOk = typeCheck();
 if (!isTypeCheckOk) process.exit(1);
 
-await esbuild.build(appBuildOptions);
+// await esbuild.build(appBuildOptions);
 await esbuild.build(extBuildOptions);
 
 copyAssets();
