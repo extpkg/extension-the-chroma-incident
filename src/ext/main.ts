@@ -45,6 +45,8 @@ ext.runtime.onExtensionClick.addListener(async () => {
       // icon_dark: "./assets/128-dark.png",
     });
 
+    const { os } = await ext.runtime.getPlatformInfo();
+
     window = await ext.windows.create({
       center: true,
       // darkMode: isDarkMode,
@@ -52,8 +54,8 @@ ext.runtime.onExtensionClick.addListener(async () => {
       title: `The Chroma Accident`,
       // icon: isDarkMode ? "./assets/128.png" : "./assets/128-dark.png",
       vibrancy: false,
-      frame: false,
-      titleBarStyle: "inset",
+      frame: os !== "mac",
+      titleBarStyle: os === "mac" ? "inset" : undefined,
       width: 960,
       height: 600,
       aspectRatio: 960 / 600,
