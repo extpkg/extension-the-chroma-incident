@@ -13,23 +13,23 @@
   "scripts": ["main.js"],
   "modules": {
     "runtime": {
-      "permissions": ["*"],
+      "permissions": [],
       "module_version": "1.2.1"
     },
     "tabs": {
-      "permissions": ["*"],
+      "permissions": [],
       "module_version": "1.1.0"
     },
     "windows": {
-      "permissions": ["*"],
+      "permissions": [],
       "module_version": "1.1.0"
     },
     "webviews": {
-      "permissions": ["*"],
+      "permissions": [],
       "module_version": "1.0.2"
     },
     "websessions": {
-      "permissions": ["*"],
+      "permissions": [],
       "module_version": "1.0.1"
     }
   }
