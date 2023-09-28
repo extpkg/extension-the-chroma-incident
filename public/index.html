@@ -17,6 +17,14 @@
     <div id="frame"></div>
     <canvas id="canvas"></canvas>
 
+    <script>
+      (async () => {
+        const { os } = await ext.runtime.getPlatformInfo();
+        if (os === "mac") {
+          document.getElementById("frame").style.display = "none";
+        }
+      })();
+    </script>
     <script src="./app/index.js"></script>
   </body>
 </html>
