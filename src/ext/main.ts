@@ -45,7 +45,7 @@ ext.runtime.onExtensionClick.addListener(async () => {
       // icon_dark: "./assets/128-dark.png",
     });
 
-    const { os } = await ext.runtime.getPlatformInfo();
+    // const { os } = await ext.runtime.getPlatformInfo();
     const aspectRatio = 960 / 600;
     const minWidth = 960;
     const minHeight = minWidth / aspectRatio;
@@ -58,8 +58,10 @@ ext.runtime.onExtensionClick.addListener(async () => {
       // icon: isDarkMode ? "./assets/128.png" : "./assets/128-dark.png",
       icon: "./assets/128.png",
       vibrancy: false,
-      frame: os !== "mac",
-      titleBarStyle: os === "mac" ? "inset" : undefined,
+      // frame: os !== "mac",
+      frame: false,
+      // titleBarStyle: os === "mac" ? "inset" : undefined,
+      titleBarStyle: "inset",
       width: minWidth,
       height: minHeight,
       minWidth,
