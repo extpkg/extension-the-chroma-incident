@@ -1,7 +1,7 @@
 {
   "name": "extension-the-chroma-incident",
-  "version": "1.0.7",
-  "description": "",
+  "version": "1.0.8",
+  "description": "Experience vibrant realms battling through your dynamic journey.",
   "type": "module",
   "scripts": {
     "build": "cross-env NODE_ENV=production node ./scripts/build.mjs",

@@ -2,8 +2,8 @@
   "manifest_version": "ext-v1",
   "name": "The Chroma Incident",
   "short_name": "The Chroma Incident",
-  "description": "",
-  "version": "1.0.7",
+  "description": "Experience vibrant realms battling through your dynamic journey.",
+  "version": "1.0.8",
   "author": "EXT, Inc.",
   "icons": {
     "128": "./assets/128.png",
