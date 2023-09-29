@@ -295,18 +295,25 @@ var e;
         X(x1, s, i, s, n),
         X(x1, y1, x1, s, n);
     }
-    function A(t, e, i = 16, s = 16, n = cursorColor, o = cursorColor2) {
-      (cursorColor2 = o),
-        (cursorColor = n),
-        (x1 = 0 | t),
-        (y1 = 0 | e),
-        (i |= 0),
-        (n |= 0);
-      var r = (s |= 0) - y1;
-      if ((X(x1, y1, i, y1, n), r > 0))
-        for (; --r; ) X(x1, y1 + r, i, y1 + r, n);
-      else if (0 > r) for (; ++r; ) X(x1, y1 + r, i, y1 + r, n);
-      X(x1, s, i, s, n);
+    function drawRectangle(
+      startX,
+      startY,
+      width = 16,
+      height = 16,
+      primaryColor = cursorColor,
+      secondaryColor = cursorColor2,
+    ) {
+      (cursorColor2 = secondaryColor),
+        (cursorColor = primaryColor),
+        (x1 = 0 | startX),
+        (y1 = 0 | startY),
+        (width |= 0),
+        (primaryColor |= 0);
+      var r = (height |= 0) - y1;
+      if ((X(x1, y1, width, y1, primaryColor), r > 0))
+        for (; --r; ) X(x1, y1 + r, width, y1 + r, primaryColor);
+      else if (0 > r) for (; ++r; ) X(x1, y1 + r, width, y1 + r, primaryColor);
+      X(x1, height, width, height, primaryColor);
     }
     function P(
       t = 0,
@@ -344,79 +351,160 @@ var e;
                 (C[y + ((a + c) * i + r + u)] =
                   d[C[w + ((e + c) * i + t + u)]]));
     }
-    function L(e) {
-      e[7] || (e[7] = 1), e[8] || (e[8] = 1);
-      for (var i = e[0].length, s = 0; i > s; s++) {
-        var n;
-        (a = e[0].charAt(s)),
-          (index = fontString.indexOf(a)),
-          (n = fontBitmap.substring(25 * index, 25 * index + 25).split(""));
-        for (var o = 0; 5 > o; o++)
-          for (var r = 0; 5 > r; r++)
-            if (1 == n[5 * o + r])
-              if (1 == e[4])
-                S(
-                  e[1] + r * e[4] + (5 * e[4] + e[3]) * s,
-                  (e[2] +
-                    (e[6] ? Math.sin((1 * (t + s * e[8])) / e[7]) * e[6] : 0) +
-                    o * e[4]) |
-                    0,
-                );
-              else {
-                let i = e[1] + r * e[4] + (5 * e[4] + e[3]) * s,
-                  n =
-                    (e[2] +
-                      (e[6]
-                        ? Math.sin((1 * (t + s * e[8])) / e[7]) * e[6]
-                        : 0) +
-                      o * e[4]) |
-                    0;
-                A(i, n, i + e[4], n + e[4], e[5]);
+    function drawCharacter(params) {
+      const {
+        characterString,
+        xStart,
+        yStart,
+        charSpacing,
+        scaleFactor = 1,
+        effectFactor = 1,
+        effectMultiplier,
+        // ... other parameters can be added as needed
+      } = {
+        characterString: params[0],
+        xStart: params[1],
+        yStart: params[2],
+        charSpacing: params[3],
+        scaleFactor: params[4],
+        effectFactor: params[7],
+        effectMultiplier: params[8],
+      };
+
+      const BITMAP_SIZE = 5;
+      const characters = characterString.length;
+      for (let charIndex = 0; charIndex < characters; charIndex++) {
+        const character = characterString.charAt(charIndex);
+        const fontIndex = fontString.indexOf(character);
+        const charBitmap = fontBitmap
+          .substring(
+            fontIndex * BITMAP_SIZE ** 2,
+            (fontIndex + 1) * BITMAP_SIZE ** 2,
+          )
+          .split("");
+
+        for (let rowIndex = 0; rowIndex < BITMAP_SIZE; rowIndex++) {
+          for (let colIndex = 0; colIndex < BITMAP_SIZE; colIndex++) {
+            if (charBitmap[rowIndex * BITMAP_SIZE + colIndex] === "1") {
+              const xPosition =
+                xStart +
+                colIndex * scaleFactor +
+                (BITMAP_SIZE * scaleFactor + charSpacing) * charIndex;
+              let yPosition = yStart + rowIndex * scaleFactor;
+
+              // Apply effect if necessary
+              if (effectMultiplier) {
+                yPosition +=
+                  Math.sin(
+                    (effectMultiplier * (t + charIndex * effectFactor)) /
+                      effectFactor,
+                  ) * effectMultiplier;
               }
+
+              // Choose drawing method based on scaleFactor
+              if (scaleFactor === 1) {
+                S(xPosition, yPosition);
+              } else {
+                drawRectangle(
+                  xPosition,
+                  yPosition,
+                  xPosition + scaleFactor,
+                  yPosition + scaleFactor,
+                  params[5],
+                ); // Assuming params[5] has color or other relevant info
+              }
+            }
+          }
+        }
       }
-      var a;
     }
-    function O(t) {
-      var e = 5 * t[7],
-        i = t[0].split("\n"),
-        s = i.slice(0),
-        n = i.length,
-        o = s.sort(function (t, e) {
-          return e.length - t.length;
-        })[0],
-        r = o.length * e + (o.length - 1) * t[3],
-        a = n * e + (n - 1) * t[4];
-      t[5] || (t[5] = "left"), t[6] || (t[6] = "bottom");
-      var h = t[1],
-        l = t[2],
-        d = t[1] + r,
-        c = t[2] + a;
-      "center" == t[5]
-        ? ((h = t[1] - r / 2), (d = t[1] + r / 2))
-        : "right" == t[5] && ((h = t[1] - r), (d = t[1])),
-        "center" == t[6]
-          ? ((l = t[2] - a / 2), (c = t[2] + a / 2))
-          : "bottom" == t[6] && ((l = t[2] - a), (c = t[2]));
-      for (var u = h + r / 2, p = l + a / 2, f = 0; n > f; f++) {
-        var y = i[f],
-          w = y.length * e + (y.length - 1) * t[3],
-          g = t[1],
-          x = t[2] + (e + t[4]) * f;
-        "center" == t[5]
-          ? (g = t[1] - w / 2)
-          : "right" == t[5] && (g = t[1] - w),
-          "center" == t[6] ? (x -= a / 2) : "bottom" == t[6] && (x -= a),
-          L([y, g, x, t[3] || 0, t[7] || 1, t[8], t[9], t[10], t[11]]);
+    function drawText(params) {
+      const {
+        text,
+        startX,
+        startY,
+        charSpacing,
+        lineSpacing,
+        horizontalAlign = "left",
+        verticalAlign = "top",
+        scaleFactor,
+        // ... other params (like e[8], e[9], and e[10]) can be added with meaningful names if needed
+      } = {
+        text: params[0],
+        startX: params[1],
+        startY: params[2],
+        charSpacing: params[3],
+        lineSpacing: params[4],
+        horizontalAlign: params[5],
+        verticalAlign: params[6],
+        scaleFactor: params[7],
+      };
+
+      const FONT_SCALE = 5;
+      const lines = text.split("\n");
+      const longestLine = lines.sort((a, b) => b.length - a.length)[0];
+      const textWidth =
+        longestLine.length * FONT_SCALE * scaleFactor +
+        (longestLine.length - 1) * charSpacing;
+      const textHeight =
+        lines.length * FONT_SCALE * scaleFactor +
+        (lines.length - 1) * lineSpacing;
+
+      let xStart = startX,
+        yStart = startY,
+        xEnd = startX + textWidth,
+        yEnd = startY + textHeight;
+
+      if (horizontalAlign === "center") {
+        xStart -= textWidth / 2;
+        xEnd -= textWidth / 2;
+      } else if (horizontalAlign === "right") {
+        xStart -= textWidth;
+        xEnd -= textWidth;
       }
+
+      if (verticalAlign === "center") {
+        yStart -= textHeight / 2;
+        yEnd -= textHeight / 2;
+      } else if (verticalAlign === "bottom") {
+        yStart -= textHeight;
+        yEnd -= textHeight;
+      }
+
+      const centerX = xStart + textWidth / 2;
+      const centerY = yStart + textHeight / 2;
+
+      lines.forEach((line, index) => {
+        const lineWidth =
+          line.length * FONT_SCALE * scaleFactor +
+          (line.length - 1) * charSpacing;
+        let xPosition = startX,
+          yPosition = startY + (FONT_SCALE * scaleFactor + lineSpacing) * index;
+
+        if (horizontalAlign === "center") {
+          xPosition -= lineWidth / 2;
+        } else if (horizontalAlign === "right") {
+          xPosition -= lineWidth;
+        }
+
+        if (verticalAlign === "center") {
+          yPosition -= textHeight / 2;
+        } else if (verticalAlign === "bottom") {
+          yPosition -= textHeight;
+        }
+
+        drawCharacter([line, xPosition, yPosition, charSpacing, scaleFactor]);
+      });
+
       return {
-        sx: h,
-        sy: l,
-        cx: u,
-        cy: p,
-        ex: d,
-        ey: c,
-        width: r,
-        height: a,
+        sx: xStart,
+        sy: yStart,
+        cx: centerX,
+        cy: centerY,
+        ex: xEnd,
+        ey: yEnd,
+        width: textWidth,
+        height: textHeight,
       };
     }
     function k(t, e = 1, i = 0, s = 0.5, n = !1) {
@@ -1790,9 +1878,9 @@ var e;
           s = this.steps % 20 > 10 ? 0 : 1,
           n = this.steps % 30 > 15 ? 0 : 1;
         D(this.color, this.color),
-          A(e + 1, i + n, e + 5, i + 4 + n),
-          A(e, i + 1 + n, e + this.width, i + 3 + n),
-          A(e + 2, i + 2, e + 4, i + 8),
+          drawRectangle(e + 1, i + n, e + 5, i + 4 + n),
+          drawRectangle(e, i + 1 + n, e + this.width, i + 3 + n),
+          drawRectangle(e + 2, i + 2, e + 4, i + 8),
           S(e, i + 7),
           S(e + 6, i + 7),
           X(e + 1, i + 6, e + 5, i + 6),
@@ -2100,7 +2188,7 @@ var e;
           paused
             ? (D(22, 22),
               (y = o),
-              O(["PAUSED", i / 2, 128, 3, 1, "center", "top", 3, 21, 0]),
+              drawText(["PAUSED", i / 2, 128, 3, 1, "center", "top", 3, 21, 0]),
               (audioMaster.gain.value = 0))
             : ((dt = 1),
               (t += 1),
@@ -2123,7 +2211,7 @@ var e;
           height: 10,
         }),
           (y = l),
-          A(0, 0, 320, 200, 1, 1);
+          drawRectangle(0, 0, 320, 200, 1, 1);
         for (let t = 0; 1e5 > t; t++)
           (roomCandidate = {
             x: lcg.nextIntRange(5, i - 15),
@@ -2139,7 +2227,7 @@ var e;
       }),
       (drawRoom = (t) => {
         D(0, 0),
-          A(t.x, t.y, t.x + t.width, t.y + t.height, 0, 0),
+          drawRectangle(t.x, t.y, t.x + t.width, t.y + t.height, 0, 0),
           G(t.x, t.y, t.x + t.width + 1, t.y + t.height + 1, 1, 1),
           D(0, 0),
           X(t.x - 3, t.y + t.height / 2, t.x + t.width + 3, t.y + t.height / 2),
@@ -2242,12 +2330,19 @@ var e;
                   (e = t.y * Q - viewY),
                   (i = t.x * J - viewX),
                   (pat = dither[(16 * random()) | 0]),
-                  A(i + 4, e + 4, i + J - 4, e + Q - 4, t.color, 22);
+                  drawRectangle(
+                    i + 4,
+                    e + 4,
+                    i + J - 4,
+                    e + Q - 4,
+                    t.color,
+                    22,
+                  );
                 break;
               case 3:
                 (pat = dither[8]),
                   (e = t.y * Q - viewY),
-                  A(
+                  drawRectangle(
                     4 + (i = t.x * J - viewX),
                     e + 4,
                     i + J - 4,
@@ -2255,12 +2350,19 @@ var e;
                     t.color,
                     22,
                   ),
-                  A(i + 4, e + 16, i + J - 4, e + Q - 4, t.color, 0);
+                  drawRectangle(
+                    i + 4,
+                    e + 16,
+                    i + J - 4,
+                    e + Q - 4,
+                    t.color,
+                    0,
+                  );
                 break;
               case 2:
                 (pat = dither[8]),
                   (e = t.y * Q - viewY),
-                  A(
+                  drawRectangle(
                     4 + (i = t.x * J - viewX),
                     e + 4,
                     i + J - 4,
@@ -2268,12 +2370,19 @@ var e;
                     t.color,
                     22,
                   ),
-                  A(i + 4, e + 12, i + J - 4, e + Q - 4, t.color, 0);
+                  drawRectangle(
+                    i + 4,
+                    e + 12,
+                    i + J - 4,
+                    e + Q - 4,
+                    t.color,
+                    0,
+                  );
                 break;
               case 1:
                 (pat = dither[8]),
                   (e = t.y * Q - viewY),
-                  A(
+                  drawRectangle(
                     4 + (i = t.x * J - viewX),
                     e + 4,
                     i + J - 4,
@@ -2281,12 +2390,12 @@ var e;
                     t.color,
                     22,
                   ),
-                  A(i + 4, e + 8, i + J - 4, e + Q - 4, t.color, 0);
+                  drawRectangle(i + 4, e + 8, i + J - 4, e + Q - 4, t.color, 0);
                 break;
               default:
                 (pat = dither[8]),
                   (e = t.y * Q - viewY),
-                  A(
+                  drawRectangle(
                     4 + (i = t.x * J - viewX),
                     e + 4,
                     i + J - 4,
@@ -2415,27 +2524,16 @@ var e;
             P(0, 0, i, s, 0, 0, 0, 0, mapPal);
           let e = i / sndData.length;
           (pat = dither[8]),
-            A(0, 188, soundsReady * e, 200, 13, 14),
+            drawRectangle(0, 188, soundsReady * e, 200, 13, 14),
             particles.forEach(function (t) {
               t.draw();
             }),
             D(22, 22),
-            O(["THE", 50, 54, 3, 9, "left", "top", 2, 22, 0]),
-            O(["INCIDENT", 270, 106, 3, 9, "right", "top", 2, 22, 0]),
-            O(["CHROMA", i / 2, 70, 8, 9, "center", "top", 6, 22, 0]),
-            O([
-              "",
-              i / 2,
-              170,
-              1,
-              9,
-              "center",
-              "top",
-              1,
-              22,
-              0,
-            ]),
-            O([
+            drawText(["THE", 50, 54, 3, 9, "left", "top", 2, 22, 0]),
+            drawText(["INCIDENT", 270, 106, 3, 9, "right", "top", 2, 22, 0]),
+            drawText(["CHROMA", i / 2, 70, 8, 9, "center", "top", 6, 22, 0]),
+            drawText(["", i / 2, 170, 1, 9, "center", "top", 1, 22, 0]),
+            drawText([
               "WASD TO MOVE   MOUSE TO AIM/SHOOT",
               i / 2,
               180,
@@ -2448,10 +2546,8 @@ var e;
               0,
             ]),
             D(22, 22),
-            O([
-              this.ready
-                ? "CLICK TO PLAY"
-                : "ASSETS OFFLINE. LOADING...",
+            drawText([
+              this.ready ? "CLICK TO PLAY" : "ASSETS OFFLINE. LOADING...",
               i / 2,
               191,
               1,
@@ -2497,7 +2593,7 @@ var e;
             [8, 7, 6, 5, 3, 2],
           ]),
             (pat = dither[8]),
-            A(0, 0, i, s, 2),
+            drawRectangle(0, 0, i, s, 2),
             (y = o),
             I(0);
           let e = (viewX / J - 3) | 0,
@@ -2515,17 +2611,17 @@ var e;
                   D(o[1], o[2]), (i = t * J - viewX), (s = e * Q - viewY);
                   let r = J / 2;
                   (pat = dither[C[a + 320 * e + t]]),
-                    A(i, s, i + r, s + r),
+                    drawRectangle(i, s, i + r, s + r),
                     (pat = dither[C[a + 320 * e + t - 1]]),
-                    A(i + r, s, i + J, s + r),
+                    drawRectangle(i + r, s, i + J, s + r),
                     (pat = dither[C[a + 320 * e + t - 2]]),
-                    A(i + r, s + r, i + J, s + Q),
+                    drawRectangle(i + r, s + r, i + J, s + Q),
                     (pat = dither[C[a + 320 * e + t - 3]]),
-                    A(i, s + r, i + J, s + Q),
+                    drawRectangle(i, s + r, i + J, s + Q),
                     0 == getGID(t * J, (e + 1) * Q) &&
                       ((pat = dither[8]),
                       D(o[3], o[4]),
-                      A(i, s + r, i + J, s + J),
+                      drawRectangle(i, s + r, i + J, s + J),
                       X(i, s + r, i + J, s + r, o[0], o[0]),
                       X(i, s + Q - 1, i + Q, s + Q - 1, 1, 1)),
                     0 == getGID(t * J, (e - 1) * Q) &&
@@ -2547,7 +2643,7 @@ var e;
                   (i = t * J - viewX),
                     (s = e * Q - viewY),
                     (pat = dither[C[a + 320 * e + t]]),
-                    A(i, s, i + J, s + Q, o[4], o[5]);
+                    drawRectangle(i, s, i + J, s + Q, o[4], o[5]);
               }
             }
           drawSwitches(),
@@ -2565,10 +2661,11 @@ var e;
             }),
             player.draw(),
             D(22, 22),
-            O([
+            // TODO: make it shift if in fullscreen
+            drawText([
               "HEALTH",
-              5,
-              5,
+              25, //x
+              5, //y
               1,
               1,
               "left",
@@ -2579,9 +2676,9 @@ var e;
               4,
             ]),
             (pat = dither[8]),
-            A(42, 5, 42 + player.health / 2, 10, 64, 11),
+            drawRectangle(62, 5, 62 + player.health / 2, 10, 64, 11),
             D(22, 22),
-            O([
+            drawText([
               "SCORE " + multiplier.pad(3) + "X " + score.pad(11),
               i - 5,
               5,
@@ -2594,10 +2691,10 @@ var e;
               player.score ? 2 : 0,
               4,
             ]),
-            O([
+            drawText([
               "CELLS " + player.batteries.pad(4),
-              160,
-              5,
+              175, //x
+              5, //y
               1,
               1,
               "right",
@@ -2652,7 +2749,7 @@ var e;
               t.state = 0;
             }),
             (y = h),
-            A(0, 0, 320, 200, 0, 0),
+            drawRectangle(0, 0, 320, 200, 0, 0),
             (y = o),
             (state = "game"));
         },
@@ -2666,11 +2763,24 @@ var e;
               4 == t.state && (D(22, 22), S(t.x, t.y));
             }),
             D(7, 7),
-            O(["", i / 2, 10, 2, 3, "center", "top", 1, 7, 0]),
+            drawText(["", i / 2, 10, 2, 3, "center", "top", 1, 7, 0]),
             D(0, 5),
-            O(["GAME OVER", i / 2, 80, 3, 9, "center", "top", 4, 4, 16, 10, 3]),
+            drawText([
+              "GAME OVER",
+              i / 2,
+              80,
+              3,
+              9,
+              "center",
+              "top",
+              4,
+              4,
+              16,
+              10,
+              3,
+            ]),
             D(7, 7),
-            O([
+            drawText([
               counts.enemiesKilled +
                 " ACHROMATS VANQUISHED\n" +
                 counts.switchesActivated +
@@ -2686,7 +2796,7 @@ var e;
               0,
             ]),
             D(22, 22),
-            O([
+            drawText([
               "PRESS SPACE TO PLAY AGAIN",
               i / 2,
               175,

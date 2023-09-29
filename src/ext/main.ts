@@ -46,19 +46,25 @@ ext.runtime.onExtensionClick.addListener(async () => {
     });
 
     const { os } = await ext.runtime.getPlatformInfo();
+    const aspectRatio = 960 / 600;
+    const minWidth = 960;
+    const minHeight = minWidth / aspectRatio;
 
     window = await ext.windows.create({
       center: true,
       // darkMode: isDarkMode,
-      fullscreenable: false,
+      fullscreenable: true,
       title: `The Chroma Accident`,
       // icon: isDarkMode ? "./assets/128.png" : "./assets/128-dark.png",
+      icon: "./assets/128.png",
       vibrancy: false,
       frame: os !== "mac",
       titleBarStyle: os === "mac" ? "inset" : undefined,
-      width: 960,
-      height: 600,
-      aspectRatio: 960 / 600,
+      width: minWidth,
+      height: minHeight,
+      minWidth,
+      minHeight,
+      aspectRatio,
     });
 
     const contentSize = await ext.windows.getContentSize(window.id);
