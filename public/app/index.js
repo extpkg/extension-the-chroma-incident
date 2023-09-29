@@ -2585,6 +2585,8 @@ var e;
             updateCollisions();
         },
         draw: function (t) {
+          const canvas = document.getElementById("canvas");
+          canvas.style.cursor = "none";
           (terrainColors = [
             [60, 62, 63, 64, 16, 32],
             [25, 26, 27, 28, 29, 30],
@@ -2754,6 +2756,8 @@ var e;
             (state = "game"));
         },
         draw: function (t) {
+          const canvas = document.getElementById("canvas");
+          canvas.style.cursor = "auto";
           (y = o),
             I(0),
             (w = l),
