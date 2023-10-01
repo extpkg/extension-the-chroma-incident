@@ -7,6 +7,8 @@ type Instance = {
 
 let instance: Instance | null = null;
 
+const title = "The Chroma Accident";
+
 const focusInstance = async () => {
   if (instance) {
     await ext.windows.restore(instance.windowId);
@@ -36,31 +38,23 @@ ext.runtime.onExtensionClick.addListener(async () => {
   let tab: ext.tabs.Tab | null = null;
 
   try {
-    // const isDarkMode = await ext.windows.getPlatformDarkMode();
-
     tab = await ext.tabs.create({
-      text: `The Chroma Accident`,
+      text: title,
       icon: "./assets/128.png",
       mutable: true,
-      // icon_dark: "./assets/128-dark.png",
     });
 
-    // const { os } = await ext.runtime.getPlatformInfo();
     const aspectRatio = 960 / 600;
     const minWidth = 960;
     const minHeight = minWidth / aspectRatio;
 
     window = await ext.windows.create({
       center: true,
-      // darkMode: isDarkMode,
       fullscreenable: true,
-      title: `The Chroma Accident`,
-      // icon: isDarkMode ? "./assets/128.png" : "./assets/128-dark.png",
+      title,
       icon: "./assets/128.png",
       vibrancy: false,
-      // frame: os !== "mac",
       frame: false,
-      // titleBarStyle: os === "mac" ? "inset" : undefined,
       titleBarStyle: "inset",
       width: minWidth,
       height: minHeight,
@@ -71,8 +65,13 @@ ext.runtime.onExtensionClick.addListener(async () => {
 
     const contentSize = await ext.windows.getContentSize(window.id);
 
+    const permissions = await ext.runtime.getPermissions();
+    const persistent =
+      (permissions["websessions"] ?? {})["create.persistent"]?.granted ?? false;
+
     websession = await ext.websessions.create({
-      partition: `The Chroma Accident`,
+      partition: title,
+      persistent,
       global: false,
     });
     webview = await ext.webviews.create({

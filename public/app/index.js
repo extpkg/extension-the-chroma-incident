@@ -2026,6 +2026,7 @@ var e;
                   (3 == foundSwitch.state &&
                     (k(sounds.cellComplete, 1, 0, 0.7, 0),
                     (score += 2e4 * multiplier),
+                    (bestScore = score > bestScore ? score : bestScore),
                     (player.health += 2),
                     (y = h),
                     R(
@@ -2039,7 +2040,8 @@ var e;
                   k(sounds.powerLevel, 1, 0, 0.7, 0),
                   foundSwitch.state++,
                   player.batteries--,
-                  (score += 2500 * multiplier)))));
+                  (score += 2500 * multiplier),
+                  (bestScore = score > bestScore ? score : bestScore)))));
       },
       kill: function () {
         (counts.enemiesKilled = counts.totalEnemies - enemies.length),
@@ -2052,6 +2054,10 @@ var e;
     const J = 20,
       Q = 20;
     (score = 0),
+      (bestScore = Number.parseInt(
+        window.localStorage.getItem("bestScore") ?? 0,
+        10,
+      )),
       (multiplier = 1),
       (rooms = []),
       (switches = []),
@@ -2582,7 +2588,14 @@ var e;
             batteries.forEach((t) => {
               t.update();
             }),
-            updateCollisions();
+            updateCollisions(),
+            (() => {
+              console.log(score, bestScore, score > bestScore);
+              if (score > bestScore) {
+                window.localStorage.setItem("bestScore", score);
+                bestScore = score;
+              }
+            })();
         },
         draw: function (t) {
           const canvas = document.getElementById("canvas");
@@ -2689,10 +2702,8 @@ var e;
               "right",
               "top",
               1,
-              22,
-              player.score ? 2 : 0,
-              4,
             ]),
+            drawText([bestScore.pad(11), i - 5, 15, 1, 1, "right", "top", 1]),
             drawText([
               "CELLS " + player.batteries.pad(4),
               175, //x
