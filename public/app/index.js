@@ -194,8 +194,8 @@ var e;
     function I(t = 0, e = y) {
       C.fill(t, e, e + n);
     }
-    function D(t = cursorColor, e = cursorColor2) {
-      (cursorColor = t), (cursorColor2 = e);
+    function changePenColor(primary = cursorColor, secondary = cursorColor2) {
+      (cursorColor = primary), (cursorColor2 = secondary);
     }
     function S(t, e, n = cursorColor, o = cursorColor2) {
       let r = ((e |= 0) % 4) * 4 + ((t |= 0) % 4),
@@ -1636,13 +1636,13 @@ var e;
                   S(t - 1, e), S(a + 1, e++), S(t - 1, h), S(a + 1, h--);
               })(e, i - s, this.width, this.height, this.color, this.color - 1);
             let n = (this.width / 5) | 0;
-            D(22, 22),
+            changePenColor(22, 22),
               t % 40 > this.blinkTimer &&
                 (M(e + n, i + n, n, n, 22, 22),
                 M(e + 3 * n, i + n, n, n, 22, 22)),
               this.biting,
               this.health < this.startHealth &&
-                (D(12, 12), G(e, i - 3, e + this.health, i - 2)),
+                (changePenColor(12, 12), G(e, i - 3, e + this.health, i - 2)),
               0 > this.health && this.kill();
           }
         }),
@@ -1737,7 +1737,7 @@ var e;
             e = this.y - viewY;
           E(t, e, 24) &&
             ((pat = dither[(15 * random()) | 0]),
-            D(this.color, this.color - 1),
+            changePenColor(this.color, this.color - 1),
             R(t, e, 2),
             (pat = dither[8]));
         }),
@@ -1786,7 +1786,8 @@ var e;
           (this.oldX = this.x), (this.oldY = this.y);
           let t = this.x - viewX,
             e = this.y - viewY;
-          E(t, e, 24) && ((y = o), D(this.color, this.color - 1), S(t, e));
+          E(t, e, 24) &&
+            ((y = o), changePenColor(this.color, this.color - 1), S(t, e));
         }),
         (this.update = function () {
           this.life--,
@@ -1836,7 +1837,8 @@ var e;
           let t = this.x - viewX,
             e = this.y - viewY;
           E(t, e) &&
-            (D((63 * random()) | 0, (63 * random()) | 0), R(t + 2, e + 2, 2));
+            (changePenColor((63 * random()) | 0, (63 * random()) | 0),
+            R(t + 2, e + 2, 2));
         }),
         (this.kill = function () {
           for (let t = 0; 40 > t; t++)
@@ -1877,7 +1879,7 @@ var e;
           i = this.y - viewY,
           s = this.steps % 20 > 10 ? 0 : 1,
           n = this.steps % 30 > 15 ? 0 : 1;
-        D(this.color, this.color),
+        changePenColor(this.color, this.color),
           drawRectangle(e + 1, i + n, e + 5, i + 4 + n),
           drawRectangle(e, i + 1 + n, e + this.width, i + 3 + n),
           drawRectangle(e + 2, i + 2, e + 4, i + 8),
@@ -2026,7 +2028,6 @@ var e;
                   (3 == foundSwitch.state &&
                     (k(sounds.cellComplete, 1, 0, 0.7, 0),
                     (score += 2e4 * multiplier),
-                    (bestScore = score > bestScore ? score : bestScore),
                     (player.health += 2),
                     (y = h),
                     R(
@@ -2040,8 +2041,7 @@ var e;
                   k(sounds.powerLevel, 1, 0, 0.7, 0),
                   foundSwitch.state++,
                   player.batteries--,
-                  (score += 2500 * multiplier),
-                  (bestScore = score > bestScore ? score : bestScore)))));
+                  (score += 2500 * multiplier)))));
       },
       kill: function () {
         (counts.enemiesKilled = counts.totalEnemies - enemies.length),
@@ -2058,6 +2058,7 @@ var e;
         window.localStorage.getItem("bestScore") ?? 0,
         10,
       )),
+      (newBestScore = false),
       (multiplier = 1),
       (rooms = []),
       (switches = []),
@@ -2192,7 +2193,7 @@ var e;
           : [];
         (gp = s[0]),
           paused
-            ? (D(22, 22),
+            ? (changePenColor(22, 22),
               (y = o),
               drawText(["PAUSED", i / 2, 128, 3, 1, "center", "top", 3, 21, 0]),
               (audioMaster.gain.value = 0))
@@ -2232,10 +2233,10 @@ var e;
         y = o;
       }),
       (drawRoom = (t) => {
-        D(0, 0),
+        changePenColor(0, 0),
           drawRectangle(t.x, t.y, t.x + t.width, t.y + t.height, 0, 0),
           G(t.x, t.y, t.x + t.width + 1, t.y + t.height + 1, 1, 1),
-          D(0, 0),
+          changePenColor(0, 0),
           X(t.x - 3, t.y + t.height / 2, t.x + t.width + 3, t.y + t.height / 2),
           X(t.x + t.width / 2, t.y - 3, t.x + t.width / 2, t.y + t.height + 3);
       }),
@@ -2254,7 +2255,7 @@ var e;
               );
             t++
           );
-          (y = l), D(0, 0), S(e, i);
+          (y = l), changePenColor(0, 0), S(e, i);
           for (let t = 0; 100 > t; t++) {
             let t = "";
             if (
@@ -2313,7 +2314,7 @@ var e;
             },
           ].forEach((t) => {
             (y = l),
-              D(2, 2),
+              changePenColor(2, 2),
               S(t.x, t.y),
               switches.push({
                 x: t.x,
@@ -2534,7 +2535,7 @@ var e;
             particles.forEach(function (t) {
               t.draw();
             }),
-            D(22, 22),
+            changePenColor(22, 22),
             drawText(["THE", 50, 54, 3, 9, "left", "top", 2, 22, 0]),
             drawText(["INCIDENT", 270, 106, 3, 9, "right", "top", 2, 22, 0]),
             drawText(["CHROMA", i / 2, 70, 8, 9, "center", "top", 6, 22, 0]),
@@ -2551,7 +2552,7 @@ var e;
               22,
               0,
             ]),
-            D(22, 22),
+            changePenColor(22, 22),
             drawText([
               this.ready ? "CLICK TO PLAY" : "ASSETS OFFLINE. LOADING...",
               i / 2,
@@ -2588,14 +2589,7 @@ var e;
             batteries.forEach((t) => {
               t.update();
             }),
-            updateCollisions(),
-            (() => {
-              console.log(score, bestScore, score > bestScore);
-              if (score > bestScore) {
-                window.localStorage.setItem("bestScore", score);
-                bestScore = score;
-              }
-            })();
+            updateCollisions();
         },
         draw: function (t) {
           const canvas = document.getElementById("canvas");
@@ -2623,7 +2617,9 @@ var e;
                 o = terrainColors[Y(t, e, h)];
               switch (n) {
                 case 1:
-                  D(o[1], o[2]), (i = t * J - viewX), (s = e * Q - viewY);
+                  changePenColor(o[1], o[2]),
+                    (i = t * J - viewX),
+                    (s = e * Q - viewY);
                   let r = J / 2;
                   (pat = dither[C[a + 320 * e + t]]),
                     drawRectangle(i, s, i + r, s + r),
@@ -2635,7 +2631,7 @@ var e;
                     drawRectangle(i, s + r, i + J, s + Q),
                     0 == getGID(t * J, (e + 1) * Q) &&
                       ((pat = dither[8]),
-                      D(o[3], o[4]),
+                      changePenColor(o[3], o[4]),
                       drawRectangle(i, s + r, i + J, s + J),
                       X(i, s + r, i + J, s + r, o[0], o[0]),
                       X(i, s + Q - 1, i + Q, s + Q - 1, 1, 1)),
@@ -2675,7 +2671,7 @@ var e;
               t.draw();
             }),
             player.draw(),
-            D(22, 22),
+            changePenColor(22, 22),
             // TODO: make it shift if in fullscreen
             drawText([
               "HEALTH",
@@ -2692,7 +2688,7 @@ var e;
             ]),
             (pat = dither[8]),
             drawRectangle(62, 5, 62 + player.health / 2, 10, 64, 11),
-            D(22, 22),
+            changePenColor(22, 22), // white, I suppose
             drawText([
               "SCORE " + multiplier.pad(3) + "X " + score.pad(11),
               i - 5,
@@ -2745,9 +2741,17 @@ var e;
       }),
       (states.gameover = {
         step: function (t) {
+          (() => {
+            if (score > bestScore) {
+              window.localStorage.setItem("bestScore", score);
+              bestScore = score;
+              newBestScore = true;
+            }
+          })();
           Key.justReleased(Key.SPACE) &&
             ((player.health = 100),
             (score = 0),
+            (newBestScore = false),
             (player.batteries = 20),
             (player.x = 3840),
             (player.y = 2400),
@@ -2775,15 +2779,13 @@ var e;
             (mapPal = [1, 31]),
             P(0, 0, i, s, 0, 0, 0, 0, mapPal),
             switches.forEach((t) => {
-              4 == t.state && (D(22, 22), S(t.x, t.y));
+              4 == t.state && (changePenColor(22, 22), S(t.x, t.y));
             }),
-            D(7, 7),
-            drawText(["", i / 2, 10, 2, 3, "center", "top", 1, 7, 0]),
-            D(0, 5),
+            changePenColor(0, 5), // red
             drawText([
               "GAME OVER",
               i / 2,
-              80,
+              newBestScore ? 70 : 80,
               3,
               9,
               "center",
@@ -2794,7 +2796,21 @@ var e;
               10,
               3,
             ]),
-            D(7, 7),
+            changePenColor(22, 0), // white, I suppose (22, 22 completely white)
+            (pat = dither[0]),
+            newBestScore &&
+              drawText([
+                "BEST " + bestScore.pad(11),
+                i - 57,
+                105,
+                3,
+                1,
+                "right",
+                "top",
+                2,
+              ]),
+            (pat = dither[8]),
+            changePenColor(7, 7), // yellow
             drawText([
               counts.enemiesKilled +
                 " ACHROMATS VANQUISHED\n" +
@@ -2810,7 +2826,7 @@ var e;
               7,
               0,
             ]),
-            D(22, 22),
+            changePenColor(22, 22),
             drawText([
               "PRESS SPACE TO PLAY AGAIN",
               i / 2,
