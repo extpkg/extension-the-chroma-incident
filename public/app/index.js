@@ -2796,7 +2796,7 @@ var e;
               10,
               3,
             ]),
-            changePenColor(22, 0), // white, I suppose (22, 22 completely white)
+            changePenColor(13, 0), // white, I suppose (22, 22 completely white)
             (pat = dither[0]),
             newBestScore &&
               drawText([
