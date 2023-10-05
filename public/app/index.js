@@ -1667,6 +1667,12 @@ var e;
               this.hit &&
                 ((this.health -= 3),
                 (score += 5 * multiplier),
+                (() => {
+                  if (score > bestScore) {
+                    bestScore = score;
+                    newBestScore = true;
+                  }
+                })(),
                 (this.hit = !1)),
               (1 != getGID(this.x, this.oldY) &&
                 1 != getGID(this.x + this.width, this.oldY) &&
@@ -1718,6 +1724,12 @@ var e;
             );
           random() > 0.25 && batteries.push(new Z(this.x + 1, this.y + 1)),
             (score += 100 * this.width * multiplier),
+            (() => {
+              if (score > bestScore) {
+                bestScore = score;
+                newBestScore = true;
+              }
+            })(),
             enemies.splice(enemies.indexOf(this), 1);
         });
     }
@@ -2028,6 +2040,12 @@ var e;
                   (3 == foundSwitch.state &&
                     (k(sounds.cellComplete, 1, 0, 0.7, 0),
                     (score += 2e4 * multiplier),
+                    (() => {
+                      if (score > bestScore) {
+                        bestScore = score;
+                        newBestScore = true;
+                      }
+                    })(),
                     (player.health += 2),
                     (y = h),
                     R(
@@ -2041,7 +2059,13 @@ var e;
                   k(sounds.powerLevel, 1, 0, 0.7, 0),
                   foundSwitch.state++,
                   player.batteries--,
-                  (score += 2500 * multiplier)))));
+                  (score += 2500 * multiplier),
+                  (() => {
+                    if (score > bestScore) {
+                      bestScore = score;
+                      newBestScore = true;
+                    }
+                  })()))));
       },
       kill: function () {
         (counts.enemiesKilled = counts.totalEnemies - enemies.length),
@@ -2699,7 +2723,9 @@ var e;
               "top",
               1,
             ]),
+            changePenColor(57, 57), // white, I suppose
             drawText([bestScore.pad(11), i - 5, 15, 1, 1, "right", "top", 1]),
+            changePenColor(22, 22), // white, I suppose
             drawText([
               "CELLS " + player.batteries.pad(4),
               175, //x
@@ -2785,7 +2811,7 @@ var e;
             drawText([
               "GAME OVER",
               i / 2,
-              newBestScore ? 70 : 80,
+              newBestScore ? 50 : 80,
               3,
               9,
               "center",
@@ -2800,12 +2826,23 @@ var e;
             (pat = dither[0]),
             newBestScore &&
               drawText([
-                "BEST " + bestScore.pad(11),
-                i - 57,
-                105,
+                "NEW RECORD!",
+                i / 2 + 2,
+                95,
                 3,
                 1,
-                "right",
+                "center",
+                "top",
+                2,
+              ]),
+            newBestScore &&
+              drawText([
+                bestScore.pad(11),
+                i / 2,
+                115,
+                3,
+                1,
+                "center",
                 "top",
                 2,
               ]),
