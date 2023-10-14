@@ -2085,6 +2085,10 @@ var e;
         10,
       )),
       (newBestScore = false),
+      (os = ""),
+      (async () => {
+        os = (await ext.runtime.getPlatformInfo()).os;
+      })(),
       (multiplier = 1),
       (rooms = []),
       (switches = []),
@@ -2706,7 +2710,7 @@ var e;
             changePenColor(22, 22),
             drawText([
               "HEALTH",
-              isFullscreen /* and not macos */ ? 5 : 25, // TODO: add check for macos
+              isFullscreen || os !== "mac" ? 5 : 25, // TODO: add check for macos
               5, //y
               1,
               1,
@@ -2719,9 +2723,9 @@ var e;
             ]),
             (pat = dither[8]),
             drawRectangle(
-              isFullscreen /* and not macos */ ? 45 : 62,
+              isFullscreen || os !== "mac" ? 45 : 62,
               5,
-              (isFullscreen /* and not macos */ ? 45 : 62) + player.health / 2,
+              (isFullscreen || os !== "mac" ? 45 : 62) + player.health / 2,
               10,
               64,
               11,
