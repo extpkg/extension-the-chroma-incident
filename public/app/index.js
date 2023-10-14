@@ -1769,6 +1769,7 @@ var e;
             switch (this.type) {
               case 1:
                 (this.xspeed = -this.xspeed), (this.yspeed = -this.yspeed);
+                break;
               default:
                 this.kill();
             }
@@ -2077,7 +2078,8 @@ var e;
     };
     const J = 20,
       Q = 20;
-    (score = 0),
+    (isFullscreen = false),
+      (score = 0),
       (bestScore = Number.parseInt(
         window.localStorage.getItem("bestScore") ?? 0,
         10,
@@ -2104,6 +2106,12 @@ var e;
       (lcg = new K(1019)),
       (tileng = new K(42)),
       (init = () => {
+        ext.windows.onEnteredFullscreen.addListener(() => {
+          isFullscreen = true;
+        });
+        ext.windows.onExitedFullscreen.addListener(() => {
+          isFullscreen = false;
+        });
         window.addEventListener(
           "keyup",
           function (t) {
@@ -2696,10 +2704,9 @@ var e;
             }),
             player.draw(),
             changePenColor(22, 22),
-            // TODO: make it shift if in fullscreen
             drawText([
               "HEALTH",
-              25, //x
+              isFullscreen /* and not macos */ ? 5 : 25, // TODO: add check for macos
               5, //y
               1,
               1,
@@ -2711,7 +2718,14 @@ var e;
               4,
             ]),
             (pat = dither[8]),
-            drawRectangle(62, 5, 62 + player.health / 2, 10, 64, 11),
+            drawRectangle(
+              isFullscreen /* and not macos */ ? 45 : 62,
+              5,
+              (isFullscreen /* and not macos */ ? 45 : 62) + player.health / 2,
+              10,
+              64,
+              11,
+            ),
             changePenColor(22, 22), // white, I suppose
             drawText([
               "SCORE " + multiplier.pad(3) + "X " + score.pad(11),
@@ -2728,8 +2742,8 @@ var e;
             changePenColor(22, 22), // white, I suppose
             drawText([
               "CELLS " + player.batteries.pad(4),
-              175, //x
-              5, //y
+              isFullscreen /* and not macos */ ? 160 : 175,
+              5,
               1,
               1,
               "right",
