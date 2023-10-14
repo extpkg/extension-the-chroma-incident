@@ -2795,10 +2795,8 @@ var e;
       (states.gameover = {
         step: function (t) {
           (() => {
-            if (score > bestScore) {
+            if (newBestScore) {
               window.localStorage.setItem("bestScore", score);
-              bestScore = score;
-              newBestScore = true;
             }
           })();
           Key.justReleased(Key.SPACE) &&
