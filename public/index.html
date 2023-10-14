@@ -22,7 +22,7 @@
       const platformInfo = await ext.runtime.getPlatformInfo();
 
       if (platformInfo.os !== "mac") {
-        document.getElementById("frame").style.right = "105px";
+        document.getElementById("frame").style.display = "none";
       }
     </script>
   </body>
