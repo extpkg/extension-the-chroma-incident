@@ -2742,11 +2742,20 @@ var e;
               1,
             ]),
             changePenColor(57, 57), // white, I suppose
-            drawText([bestScore.pad(11), i - 5, 15, 1, 1, "right", "top", 1]),
+            drawText([
+              `BEST SCORE ${bestScore.pad(11)}`,
+              i - 5,
+              15,
+              1,
+              1,
+              "right",
+              "top",
+              1,
+            ]),
             changePenColor(22, 22), // white, I suppose
             drawText([
               "CELLS " + player.batteries.pad(4),
-              isFullscreen /* and not macos */ ? 160 : 175,
+              isFullscreen || os !== "mac" ? 160 : 175,
               5,
               1,
               1,

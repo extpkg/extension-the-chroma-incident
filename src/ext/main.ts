@@ -47,6 +47,7 @@ ext.runtime.onExtensionClick.addListener(async () => {
     const aspectRatio = 960 / 600;
     const minWidth = 960;
     const minHeight = minWidth / aspectRatio;
+    const { os } = await ext.runtime.getPlatformInfo();
 
     window = await ext.windows.create({
       center: true,
@@ -54,7 +55,8 @@ ext.runtime.onExtensionClick.addListener(async () => {
       title,
       icon: "./assets/128.png",
       vibrancy: false,
-      frame: false,
+      darkMode: "platform",
+      frame: os !== "mac",
       titleBarStyle: "inset",
       width: minWidth,
       height: minHeight,
