@@ -1671,6 +1671,9 @@ var e;
                   if (score > bestScore) {
                     bestScore = score;
                     newBestScore = true;
+                    if (newBestScore) {
+                      window.localStorage.setItem("bestScore", score);
+                    }
                   }
                 })(),
                 (this.hit = !1)),
@@ -1728,6 +1731,9 @@ var e;
               if (score > bestScore) {
                 bestScore = score;
                 newBestScore = true;
+                if (newBestScore) {
+                  window.localStorage.setItem("bestScore", score);
+                }
               }
             })(),
             enemies.splice(enemies.indexOf(this), 1);
@@ -2045,6 +2051,9 @@ var e;
                       if (score > bestScore) {
                         bestScore = score;
                         newBestScore = true;
+                        if (newBestScore) {
+                          window.localStorage.setItem("bestScore", score);
+                        }
                       }
                     })(),
                     (player.health += 2),
@@ -2065,6 +2074,9 @@ var e;
                     if (score > bestScore) {
                       bestScore = score;
                       newBestScore = true;
+                      if (newBestScore) {
+                        window.localStorage.setItem("bestScore", score);
+                      }
                     }
                   })()))));
       },
