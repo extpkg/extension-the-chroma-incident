@@ -1,11 +1,12 @@
 type Instance = {
   tabId: string;
   windowId: string;
-  webviewId: string;
   websessionId: string;
+  webviewId: string;
 };
 
 let instance: Instance | null = null;
+let lock = false;
 
 const title = "The Chroma Accident";
 
@@ -18,24 +19,26 @@ const focusInstance = async () => {
 
 const destroyInstance = async () => {
   if (instance) {
-    await ext.windows.remove(instance.windowId);
-    await ext.tabs.remove(instance.tabId);
     await ext.webviews.remove(instance.webviewId);
     await ext.websessions.remove(instance.websessionId);
+    await ext.windows.remove(instance.windowId);
+    await ext.tabs.remove(instance.tabId);
     instance = null;
   }
 };
 
 ext.runtime.onExtensionClick.addListener(async () => {
-  if (instance) {
+  if (instance || lock) {
     await focusInstance();
     return;
   }
 
-  let webview: ext.webviews.Webview | null = null;
-  let websession: ext.websessions.Websession | null = null;
-  let window: ext.windows.Window | null = null;
+  lock = true;
+
   let tab: ext.tabs.Tab | null = null;
+  let window: ext.windows.Window | null = null;
+  let websession: ext.websessions.Websession | null = null;
+  let webview: ext.webviews.Webview | null = null;
 
   try {
     tab = await ext.tabs.create({
@@ -51,11 +54,12 @@ ext.runtime.onExtensionClick.addListener(async () => {
 
     window = await ext.windows.create({
       center: true,
-      fullscreenable: true,
+      fullscreenable: false,
+      maximizable: false,
       title,
       icon: "./assets/128.png",
       vibrancy: false,
-      darkMode: "platform",
+      darkMode: true,
       frame: os !== "mac",
       titleBarStyle: "inset",
       width: minWidth,
@@ -98,6 +102,7 @@ ext.runtime.onExtensionClick.addListener(async () => {
       websessionId: websession.id,
       webviewId: webview.id,
     };
+    lock = false;
   } catch (error) {
     console.error("ext.runtime.onExtensionClick", JSON.stringify(error));
 
@@ -159,13 +164,3 @@ ext.windows.onRemoved.addListener(async () => {
     console.log(error, "ext.windows.onRemoved");
   }
 });
-
-// ext.windows.onUpdatedDarkMode.addListener(async (event, details) => {
-//   try {
-//     await ext.windows.update(event.id, {
-//       icon: details.enabled ? "./assets/128.png" : "./assets/128-dark.png",
-//     });
-//   } catch (error) {
-//     console.log(error, "ext.windows.onUpdatedDarkMode");
-//   }
-// });
