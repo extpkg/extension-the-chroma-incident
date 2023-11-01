@@ -30,8 +30,10 @@ if (!existsSync("key.pem")) {
   process.exit(1);
 }
 
+const outputFileName = process.argv[2] || "extension.ext";
+
 try {
-  execSync("npx ext-packager pack ./dist -k key.pem -o extension.ext -f", {
+  execSync(`npx ext-packager pack ./dist -k key.pem -o ${outputFileName} -f`, {
     stdio: "inherit",
   });
 } catch (error) {
