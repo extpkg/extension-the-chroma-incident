@@ -21,4 +21,4 @@ export const build = async () => {
   updateManifestWithPackageVersions();
 };
 
-build();
+await build();

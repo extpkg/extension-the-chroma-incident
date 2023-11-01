@@ -23,7 +23,7 @@ export const build = async () => {
   updateManifestWithPackageVersions();
 };
 
-build();
+await build();
 
 if (!existsSync("key.pem")) {
   console.error("key.pem file not found!");
