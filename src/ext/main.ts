@@ -8,7 +8,7 @@ type Instance = {
 let instance: Instance | null = null;
 let lock = false;
 
-const title = "The Chroma Accident";
+const title = "The Chroma Incident";
 
 const focusInstance = async () => {
   if (instance) {
