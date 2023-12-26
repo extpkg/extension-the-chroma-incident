@@ -3,3 +3,4 @@
 .DS_Store
 *.pem
 *.ext
+dist*.zip
